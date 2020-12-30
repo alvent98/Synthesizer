@@ -1,0 +1,192 @@
+<!DOCTYPE HTMl>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synthesizer</title>
+    <link rel="stylesheet" href="synth_style.css" type="text/css">
+    <link rel="shortcut icon" href="#" />
+    <script src="synth_functions.js"></script>
+</head>
+
+<body>
+    <div id="machine">
+        <!-- All the front area of the cd player -->
+        <p id="company"> </p>
+
+        <!-- Volume options -->
+        <label id="volume">Volume</label>
+        <input type="range" id="gaining" min="0" max="3" value="1.5" step="0.05">
+
+        <!-- Panning options -->
+        <label id="pan-label">Panning</label>
+        <span class="label">L</span>
+        <input type="range" id="panner" min="-1" max="1" value="0" step="0.01">
+        <span class="label">R</span>
+
+        <!-- Change octave -->
+        <div class="dropdown">
+            <button class="dropbtn">Change Octave</button>
+            <div class="dropdown-content">
+                <a onclick="leftSide()">2-3</a>
+                <a onclick="centerSide()">4-5</a>
+                <a onclick="rightSide()">6-7</a>
+            </div>
+        </div>
+        <br>
+        <!-- VCF options -->
+        <label id="vcf-label">VCF</label>
+        <span class="label">0 dB</span>
+        <input type="range" id="vcf" min="0" max="40" value="0" step="1">
+        <span class="label">40dB</span>
+        <span class="label">60Hz</span>
+        <input type="range" id="vcf-freq" min="60" max="4000" value="60" step="10">
+        <span class="label">4000 Hz</span>
+
+        <br><br>
+
+        <!-- Default Oscillator waveform options -->
+        <label id="osc-label">Default Oscillator</label>
+        <label>
+            <input id="osc-sine-wave" value="sine" type="radio" checked="checked" name="osc-radio">Sine
+            <span class="osc-types"></span>
+        </label>
+        <label> 
+            <input id="osc-tri-wave" value="triangle" type="radio" name="osc-radio">Triangle
+            <span class="osc-types"></span>
+          </label>
+        <label>
+            <input id="osc-squa-wave" value="square" type="radio" name="osc-radio">Square
+            <span class="osc-types"></span>
+          </label>
+        <label >
+            <input id="osc-saw-wave" value="sawtooth" type="radio" name="osc-radio">Sawtooth
+            <span class="osc-types"></span>
+        </label>
+
+        <!-- Detune options -->
+        <label id="det-label">Detune</label>
+        <span class="label">0</span>
+        <input type="range" id="det-freq" min="0" max="1000" value="100" step="10">
+        <span class="label">1000</span>       
+        <br><br>
+
+         <!-- LFO waveform options -->
+        <label id="lfo-label">LFO</label>
+        <label>
+            <input id="lfo-sine-wave" value="sine" type="radio" checked="checked" name="lfo-radio">Sine
+            <span class="lfo-types"></span>
+        </label>
+        <label> 
+            <input id="lfo-tri-wave" value="triangle" type="radio" name="lfo-radio">Triangle
+            <span class="lfo-types"></span>
+          </label>
+        <label>
+            <input id="lfo-squa-wave" value="square" type="radio" name="lfo-radio">Square
+            <span class="lfo-types"></span>
+          </label>
+        <label >
+            <input id="lfo-saw-wave" value="sawtooth" type="radio" name="lfo-radio">Sawtooth
+            <span class="lfo-types"></span>
+        </label>
+
+        <!-- LFO frequency  options -->
+        <label id="vcf-label">Frequency</label>
+        <span class="label">0Hz</span>
+        <input type="range" id="lfo-freq" min="0" max="4000" value="5" step="5">
+        <span class="label">4000 Hz</span>
+        <br>
+
+        <!-- ASDR -->
+
+        <!-- Attack -->
+        <label id="attack-label">Attack</label>
+        <span class="label">1</span>
+        <input type="range" id="attack" min="1" max="10" value="1.5" step="0.01">
+        <span class="label">10</span>
+
+        <!-- Start Time -->
+        <label id="attack-start-label">Start Time</label>
+        <span class="label">0</span>
+        <input type="range" id="attack-start" min="0" max="3" value="0" step="0.01">
+        <span class="label">3</span>
+
+        <!-- End Time -->
+        <label id="attack-end-label">End Time</label>
+        <span class="label">0</span>
+        <input type="range" id="attack-end" min="0" max="10" value="0.5" step="0.01">
+        <span class="label">10</span>
+        <br>
+
+
+        <!-- Decay -->
+        <label id="decay-label">Decay</label>
+        <span class="label">1</span>
+        <input type="range" id="decay" min="1" max="10" value="0.5" step="0.01">
+        <span class="label">10</span>
+
+        <!-- Start Time -->
+        <label id="decay-start-label">Start Time</label>
+        <span class="label">0</span>
+        <input type="range" id="decay-start" min="0" max="3" value="0.3" step="0.01">
+        <span class="label">3</span>
+
+        <!-- End Time -->
+        <label id="decay-end-label">End Time</label>
+        <span class="label">0</span>
+        <input type="range" id="decay-end" min="0" max="5" value="1" step="0.01">
+        <span class="label">5</span>
+
+        <br>
+
+        <!-- Release -->
+        <label id="release-label">Release</label>
+        <span class="label">0</span>
+        <input type="range" id="release" min="0" max="10" value="0" step="0.01">
+        <span class="label">10</span>
+
+        <!-- Start Time -->
+        <label id="release-start-label">Start Time</label>
+        <span class="label">0</span>
+        <input type="range" id="release-start" min="0" max="3" value="1" step="0.01">
+        <span class="label">3</span>
+
+        <!-- End Time -->
+        <label id="release-end-label">End Time</label>
+        <span class="label">0</span>
+        <input type="range" id="release-end" min="0" max="5" value="1.5" step="0.01">
+        <span class="label">5</span>
+
+
+        <div class="piano" id="piano">
+            <div class="piano-key white" data-freq=261 id="n4C">4C</div>
+            <div class="piano-key black" data-freq=277 id="n4Cs">4Cs</div>
+            <div class="piano-key white" data-freq=293 id="n4D">4D</div>
+            <div class="piano-key black" data-freq=311 id="n4Ds">4Ds</div>
+            <div class="piano-key white" data-freq=329 id="n4E">4E</div>
+            <div class="piano-key white" data-freq=349 id="n4F">4F</div>
+            <div class="piano-key black" data-freq=369 id="n4Fs">4Fs</div>
+            <div class="piano-key white" data-freq=391 id="n4G">4G</div>
+            <div class="piano-key black" data-freq=415 id="n4Gs">4Gs</div>
+            <div class="piano-key white" data-freq=440 id="n4A">4A</div>
+            <div class="piano-key black" data-freq=466 id="n4As">4As</div>
+            <div class="piano-key white" data-freq=493 id="n4B">4B</div>
+            <div class="piano-key white" data-freq=523 id="n5C">5C</div>
+            <div class="piano-key black" data-freq=554 id="n5Cs">5Cs</div>
+            <div class="piano-key white" data-freq=587 id="n5D">5D</div>
+            <div class="piano-key black" data-freq=622 id="n5Ds">5Ds</div>
+            <div class="piano-key white" data-freq=659 id="n5E">5E</div>
+            <div class="piano-key white" data-freq=698 id="n5F">5F</div>
+            <div class="piano-key black" data-freq=739 id="n5Fs">5Fs</div>
+            <div class="piano-key white" data-freq=783 id="n5G">5G</div>
+            <div class="piano-key black" data-freq=830 id="n5Gs">5Gs</div>
+            <div class="piano-key white" data-freq=880 id="n5A">5A</div>
+            <div class="piano-key black" data-freq=932 id="n5As">5As</div>
+            <div class="piano-key white" data-freq=987 id="n5B">5B</div>
+        </div>
+    </div>
+
+</body>
+
+</html>
