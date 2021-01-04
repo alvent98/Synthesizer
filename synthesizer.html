@@ -43,6 +43,10 @@
         <span class="label">60Hz</span>
         <input type="range" id="vcf-freq" min="60" max="4000" value="60" step="10">
         <span class="label">4000 Hz</span>
+        <label id="vcf-label-q">Q</label>
+        <span class="label">0</span>
+        <input type="range" id="vcf-q" min="0" max="50" value="10" step="10">
+        <span class="label">50</span>
 
         <br><br>
 
@@ -60,7 +64,7 @@
             <input id="osc-squa-wave" value="square" type="radio" name="osc-radio">Square
             <span class="osc-types"></span>
           </label>
-        <label >
+        <label>
             <input id="osc-saw-wave" value="sawtooth" type="radio" name="osc-radio">Sawtooth
             <span class="osc-types"></span>
         </label>
@@ -69,10 +73,10 @@
         <label id="det-label">Detune</label>
         <span class="label">0</span>
         <input type="range" id="det-freq" min="0" max="1000" value="100" step="10">
-        <span class="label">1000</span>       
+        <span class="label">1000</span>
         <br><br>
 
-         <!-- LFO waveform options -->
+        <!-- LFO waveform options -->
         <label id="lfo-label">LFO</label>
         <label>
             <input id="lfo-sine-wave" value="sine" type="radio" checked="checked" name="lfo-radio">Sine
@@ -86,7 +90,7 @@
             <input id="lfo-squa-wave" value="square" type="radio" name="lfo-radio">Square
             <span class="lfo-types"></span>
           </label>
-        <label >
+        <label>
             <input id="lfo-saw-wave" value="sawtooth" type="radio" name="lfo-radio">Sawtooth
             <span class="lfo-types"></span>
         </label>
@@ -94,9 +98,21 @@
         <!-- LFO frequency  options -->
         <label id="vcf-label">Frequency</label>
         <span class="label">0Hz</span>
-        <input type="range" id="lfo-freq" min="0" max="4000" value="5" step="5">
-        <span class="label">4000 Hz</span>
-        <br>
+        <input type="range" id="lfo-freq" min="0" max="100" value="5" step="5">
+        <span class="label">100 Hz</span>
+        <br><br>
+
+        <!-- Tremolo/Vibrato -->
+        <label id="tremolo-label">Tremolo</label>
+        <span class="label">0</span>
+        <input type="range" id="tremolo" min="0" max="300" value="0" step="10">
+        <span class="label">300</span>
+
+        <label id="vibrato-label">Vibrato</label>
+        <span class="label">0</span>
+        <input type="range" id="vibrato" min="0" max="1000" value="0" step="10">
+        <span class="label">1000</span>
+        <br> <br>
 
         <!-- ASDR -->
 

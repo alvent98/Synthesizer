@@ -133,14 +133,23 @@ document.addEventListener("DOMContentLoaded", function() {
     //VCF Gainning
     const vcf = audioContext.createBiquadFilter();
     const vcfGainning = document.querySelector('#vcf');
+    vcf.gain.value = 0;
     vcfGainning.addEventListener('input', function() {
         vcf.gain.value = this.value;
     }, false);
 
     //VCF Frequency
     const vcfFreq = document.querySelector('#vcf-freq');
+    vcf.frequency.value = 60;
     vcfFreq.addEventListener('input', function() {
         vcf.frequency.value = this.value;
+    }, false);
+
+    //VCF Q
+    const vcfQ = document.querySelector('#vcf-q');
+    vcf.Q.value = 10;
+    vcfQ.addEventListener('input', function() {
+        vcf.Q.value = this.value;
     }, false);
 
     //Oscillator
@@ -152,6 +161,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const lfo = audioContext.createOscillator();
     lfo.frequency.setValueAtTime(0, audioContext.currentTime);
     lfo.start(0);
+
+    //Tremolo
+    const tremolo = audioContext.createGain();
+    const tremoloElement = document.querySelector('#tremolo');
+    tremolo.gain.value = 0;
+    tremoloElement.addEventListener('input', function() {
+        tremolo.gain.value = this.value;
+    }, false);
+
+    //Vibrato
+    const vibrato = audioContext.createGain();
+    const vibratoElement = document.querySelector('#vibrato');
+    vibrato.gain.value = 0;
+    vibratoElement.addEventListener('input', function() {
+        vibrato.gain.value = this.value;
+    }, false);
+
+
 
     //Notes
     hitKey('#n4C');
@@ -179,9 +206,9 @@ document.addEventListener("DOMContentLoaded", function() {
     hitKey('#n5As');
     hitKey('#n5B');
 
-    var waveform = ["sine","sine"];
-    var waveSelector = ['input[name="osc-radio"]','input[name="lfo-radio"]'];
-    for(let i=0; i<2; i++) {
+    var waveform = ["sine", "sine"];
+    var waveSelector = ['input[name="osc-radio"]', 'input[name="lfo-radio"]'];
+    for (let i = 0; i < 2; i++) {
         document.querySelectorAll(waveSelector[i]).forEach((radioButton) => {
             radioButton.addEventListener("change", function(event) {
                 waveform[i] = event.target.value;
@@ -190,9 +217,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    var detune_lfoFreq_values = [100,5];
-    var detune_lfoFreq_selector = ['#det-freq','#lfo-freq'];
-    for(let i=0; i<2; i++) {
+    var detune_lfoFreq_values = [100, 5];
+    var detune_lfoFreq_selector = ['#det-freq', '#lfo-freq'];
+    for (let i = 0; i < 2; i++) {
         document.querySelector(detune_lfoFreq_selector[i]).addEventListener("input", function(event) {
             detune_lfoFreq_values[i] = event.target.value;
             console.log(detune_lfoFreq_values[i]);
@@ -204,24 +231,25 @@ document.addEventListener("DOMContentLoaded", function() {
     // [[attackValue, attackStartTime, attackEndTime], 
     // [decayValue, decayStartTime, decayEndTime], 
     // [releaseValue, releaseStartTime, releaseEndTime]]
-    var adsr_values = [[1.5, 0, 0.5], [0.5, 0.3, 1], [0, 1, 1.5]]; 
-    var adsrSelector = [['#attack', '#attack-start', '#attack-end'], ['#decay', '#decay-start', '#decay-end'],
-                    ['#release', '#release-start', '#release-end']];
-    for(let i=0; i<3; i++) {
-        for(let j=0; j<3; j++) {
+    var adsr_values = [
+        [1.5, 0, 0.5],
+        [0.5, 0.3, 1],
+        [0, 1, 1.5]
+    ];
+    var adsrSelector = [
+        ['#attack', '#attack-start', '#attack-end'],
+        ['#decay', '#decay-start', '#decay-end'],
+        ['#release', '#release-start', '#release-end']
+    ];
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
             document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
                 adsr_values[i][j] = event.target.value;
             });
         }
     }
 
-    const vibrato = audioContext.createGain();
 
-    const tremolo = audioContext.createGain();
-    const shaper = audioContext.createWaveShaper();
-    shaper.curve = new Float32Array([0, 1]);
-    shaper.connect(tremolo.gain);
-    lfo.connect(shaper);
 
     vcf.type = "highpass";
 
@@ -242,11 +270,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
             lfo.type = waveform[1];
             lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
-            
-            vibrato.gain.value = 100;
-            
-            vcf.frequency.value = 200;
-            vcf.Q.value = 5;
+
+            //vibrato.gain.value = 100;
+            console.log("Gainning: " + gainning.gain.value);
+            console.log("Vibrato: " + vibrato.gain.value);
+            console.log("Tremolo: " + tremolo.gain.value);
+            console.log("VCF gain: " + vcf.gain.value);
+            console.log("VCF Freq: " + vcf.frequency.value);
+            console.log("VCF Q: " + vcf.Q.value);
+            // vcf.frequency.value = 200;
+            // vcf.Q.value = 5;
         }, false);
 
         note.addEventListener('mouseup', function() {
@@ -258,17 +291,85 @@ document.addEventListener("DOMContentLoaded", function() {
         }, false);
     }
 
-    lfo.connect(gainning.gain);
+    /* 
+    oscillator = Oscillator 12
+    lfo= oscillator 15
+    adsr= gain 22
+    gainning = gain 3
+    tremolo = gain 18
+    vibrato = gain 20
+    */
 
-    //Vibrato
-    vibrato.connect(oscillator.detune);
+
+
+
+    var shaper = audioContext.createWaveShaper();
+    shaper.curve = new Float32Array([0, 1]);
+    //tremolo.connect(audioContext.destination);
+
+
+    // oscillator.connect(tremolo);
+    // lfo.connect(shaper);
+    // shaper.connect(tremolo.gain);
+    // lfo.connect(oscillator.detune);
+    // lfo.connect(vibrato);
+    // vibrato.connect(oscillator.detune);
+
+    // lfo.connect(shaper);
+    // shaper.connect(tremolo.gain);
+    // oscillator.connect(tremolo);
+    // tremolo.connect(adsrCtx);
+    // adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
+
+
+    // oscillator.connect(tremolo);
+    // lfo.connect(tremolo.gain);
+    // lfo.connect(vibrato);
+    // vibrato.connect(oscillator.detune);
+    // oscillator.connect(adsrCtx);
+    // tremolo.connect(adsrCtx);
+    // adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
+
+
+
+    //TREXEI MONO TO VIBRATO KAI TREXEI KALA
     lfo.connect(vibrato);
+    vibrato.connect(oscillator.detune);
+    oscillator.connect(adsrCtx);
+    adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
 
-    //Tremolo
-    oscillator.connect(tremolo);
 
-    lfo.connect(vcf.frequency);
 
-    oscillator.connect(adsrCtx).connect(gainning).connect(panner).connect(audioContext.destination);
+    //OLA EINAI SAN GAIN VOLUME
+    // oscillator.connect(vcf);
+    // lfo.connect(vcf);
+    // vcf.connect(tremolo);
+    // vcf.connect(vibrato);
+    // tremolo.connect(adsrCtx);
+    // vibrato.connect(adsrCtx);
+    // adsrCtx.connect(gainning);
+    // gainning.connect(panner);
+    // panner.connect(audioContext.destination);
+
+
+    //DE STAMATAEI
+
+    // lfo.connect(gainning.gain);
+
+    // vibrato.connect(oscillator.frequency);
+    // vibrato.connect(oscillator.detune);
+    // lfo.connect(vibrato);
+
+    // oscillator.connect(tremolo);
+
+    // tremolo.connect(lfo.frequency);
+    // tremolo.connect(lfo.detune);
+    // lfo.connect(tremolo);
+
+    // lfo.connect(vcf);
+    // oscillator.connect(vcf);
+    // oscillator.connect(adsrCtx).connect(gainning).connect(vcf).connect(panner).connect(audioContext.destination);
+
+
     // oscillator.connect(gainning).connect(panner).connect(audioContext.destination);
 });
