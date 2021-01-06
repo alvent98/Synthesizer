@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const vibrato = audioContext.createGain();
     const vibratoElement = document.querySelector('#vibrato');
     vibrato.gain.value = 0;
-    vibratoElement.addEventListener('input', function() {       
+    vibratoElement.addEventListener('input', function() {
         vibrato.gain.value = this.value;
     }, false);
 
@@ -203,9 +203,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //ADSR Envelope    
     var adsr_values = [
-        [1.5, 0, 0.5],  // [[attackValue, attackStartTime, attackEndTime],
-        [0.5, 0.3, 1],  // [decayValue, decayStartTime, decayEndTime], 
-        [0, 1, 1.5]     // [releaseValue, releaseStartTime, releaseEndTime]]
+        [1.5, 0, 0.5], // [[attackValue, attackStartTime, attackEndTime],
+        [0.5, 0.3, 1], // [decayValue, decayStartTime, decayEndTime], 
+        [0, 1, 1.5] // [releaseValue, releaseStartTime, releaseEndTime]]
     ];
     var adsrSelector = [
         ['#attack', '#attack-start', '#attack-end'],
