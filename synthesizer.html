@@ -11,19 +11,18 @@
 </head>
 
 <body>
-    <div id="machine">
-        <!-- All the front area of the cd player -->
-        <p id="company"> </p>
-
-        <!-- Volume options -->
+    <div id="synth">
+        <!-- Volume -->
         <label id="volume">Volume</label>
-        <input type="range" id="gaining" min="0" max="3" value="1.5" step="0.05">
+        <span >0%</span>
+        <input type="range" id="volume" min="0" max="1" value="1" step="0.01">
+        <span >100%</span>
 
-        <!-- Panning options -->
-        <label id="pan-label">Panning</label>
-        <span class="label">L</span>
+        <!-- Panner-->
+        <label id="pan-label">Panner</label>
+        <span >L</span>
         <input type="range" id="panner" min="-1" max="1" value="0" step="0.01">
-        <span class="label">R</span>
+        <span >R</span>
 
         <!-- Change octave -->
         <div class="dropdown">
@@ -37,16 +36,16 @@
         <br>
         <!-- VCF options -->
         <label id="vcf-label">VCF</label>
-        <span class="label">0 dB</span>
+        <span >0 dB</span>
         <input type="range" id="vcf" min="0" max="40" value="0" step="1">
-        <span class="label">40dB</span>
-        <span class="label">60Hz</span>
+        <span >40dB</span>
+        <span >60Hz</span>
         <input type="range" id="vcf-freq" min="60" max="4000" value="60" step="10">
-        <span class="label">4000 Hz</span>
+        <span >4000 Hz</span>
         <label id="vcf-label-q">Q</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="vcf-q" min="0" max="50" value="10" step="10">
-        <span class="label">50</span>
+        <span >50</span>
 
         <br><br>
 
@@ -54,127 +53,110 @@
         <label id="osc-label">Default Oscillator</label>
         <label>
             <input id="osc-sine-wave" value="sine" type="radio" checked="checked" name="osc-radio">Sine
-            <span class="osc-types"></span>
         </label>
         <label> 
             <input id="osc-tri-wave" value="triangle" type="radio" name="osc-radio">Triangle
-            <span class="osc-types"></span>
-          </label>
+        </label>
         <label>
             <input id="osc-squa-wave" value="square" type="radio" name="osc-radio">Square
-            <span class="osc-types"></span>
-          </label>
+        </label>
         <label>
             <input id="osc-saw-wave" value="sawtooth" type="radio" name="osc-radio">Sawtooth
-            <span class="osc-types"></span>
         </label>
 
         <!-- Detune options -->
         <label id="det-label">Detune</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="det-freq" min="0" max="1000" value="100" step="10">
-        <span class="label">1000</span>
+        <span >1000</span>
         <br><br>
 
         <!-- LFO waveform options -->
         <label id="lfo-label">LFO</label>
         <label>
             <input id="lfo-sine-wave" value="sine" type="radio" checked="checked" name="lfo-radio">Sine
-            <span class="lfo-types"></span>
         </label>
         <label> 
             <input id="lfo-tri-wave" value="triangle" type="radio" name="lfo-radio">Triangle
-            <span class="lfo-types"></span>
           </label>
         <label>
             <input id="lfo-squa-wave" value="square" type="radio" name="lfo-radio">Square
-            <span class="lfo-types"></span>
           </label>
         <label>
             <input id="lfo-saw-wave" value="sawtooth" type="radio" name="lfo-radio">Sawtooth
-            <span class="lfo-types"></span>
         </label>
 
         <!-- LFO frequency  options -->
         <label id="vcf-label">Frequency</label>
-        <span class="label">0Hz</span>
-        <input type="range" id="lfo-freq" min="0" max="100" value="5" step="5">
-        <span class="label">100 Hz</span>
+        <span >0Hz</span>
+        <input type="range" id="lfo-freq" min="0" max="50" value="5" step="0.5">
+        <span >50 Hz</span>
         <br><br>
 
         <!-- Tremolo/Vibrato -->
         <label id="tremolo-label">Tremolo</label>
-        <span class="label">0</span>
-        <input type="range" id="tremolo" min="0" max="300" value="0" step="10">
-        <span class="label">300</span>
+        <span >0</span>
+        <input type="range" id="tremolo" min="0" max="1000" value="0" step="10">
+        <span >1000</span>
 
         <label id="vibrato-label">Vibrato</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="vibrato" min="0" max="1000" value="0" step="10">
-        <span class="label">1000</span>
+        <span >1000</span>
         <br> <br>
 
         <!-- ASDR -->
-
         <!-- Attack -->
         <label id="attack-label">Attack</label>
-        <span class="label">1</span>
-        <input type="range" id="attack" min="1" max="10" value="1.5" step="0.01">
-        <span class="label">10</span>
-
+        <span >0</span>
+        <input type="range" id="attack" min="0" max="10" value="1.5" step="0.01">
+        <span >10</span>
         <!-- Start Time -->
         <label id="attack-start-label">Start Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="attack-start" min="0" max="3" value="0" step="0.01">
-        <span class="label">3</span>
-
+        <span >3</span>
         <!-- End Time -->
         <label id="attack-end-label">End Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="attack-end" min="0" max="10" value="0.5" step="0.01">
-        <span class="label">10</span>
+        <span >10</span>
         <br>
-
 
         <!-- Decay -->
         <label id="decay-label">Decay</label>
-        <span class="label">1</span>
-        <input type="range" id="decay" min="1" max="10" value="0.5" step="0.01">
-        <span class="label">10</span>
-
+        <span >0</span>
+        <input type="range" id="decay" min="0" max="10" value="0.5" step="0.01">
+        <span >10</span>
         <!-- Start Time -->
         <label id="decay-start-label">Start Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="decay-start" min="0" max="3" value="0.3" step="0.01">
-        <span class="label">3</span>
-
+        <span >3</span>
         <!-- End Time -->
         <label id="decay-end-label">End Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="decay-end" min="0" max="5" value="1" step="0.01">
-        <span class="label">5</span>
-
+        <span >5</span>
         <br>
 
         <!-- Release -->
         <label id="release-label">Release</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="release" min="0" max="10" value="0" step="0.01">
-        <span class="label">10</span>
-
+        <span >10</span>
         <!-- Start Time -->
         <label id="release-start-label">Start Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="release-start" min="0" max="3" value="1" step="0.01">
-        <span class="label">3</span>
-
+        <span >3</span>
         <!-- End Time -->
         <label id="release-end-label">End Time</label>
-        <span class="label">0</span>
+        <span >0</span>
         <input type="range" id="release-end" min="0" max="5" value="1.5" step="0.01">
-        <span class="label">5</span>
+        <span >5</span>
 
-
+        <!-- Keyboard -->
         <div class="piano" id="piano">
             <div class="piano-key white" data-freq=261 id="n4C">4C</div>
             <div class="piano-key black" data-freq=277 id="n4Cs">4Cs</div>
@@ -202,7 +184,5 @@
             <div class="piano-key white" data-freq=987 id="n5B">5B</div>
         </div>
     </div>
-
 </body>
-
 </html>

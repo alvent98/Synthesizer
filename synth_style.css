@@ -1,15 +1,14 @@
-/* Visual simulation of retro cd player */
-
-#machine {
+/* The synthesizer */
+#synth {
     text-align: center;
     margin: auto;
     border-radius: 7px;
-    border: 5px solid rgb(80, 40, 12);
-    background-image: url("images/wood_2.jpg");
+    border: 5px solid rgb(204, 163, 170);
+    background-image: url("images/futuristic.jpg");
+    /* background-color: black; */
     background-repeat: repeat;
     background-size: contain;
 }
-
 
 /* Descriptors and legends */
 label,
@@ -17,20 +16,18 @@ span,
 .piano-key {
     font-size: 20px;
     font-weight: bold;
-    font-family: "BrandonSmith-font", "Comic Sans MS", cursive, sans-serif;
-    color: rgb(80, 40, 12);
+    font-family: 'Courier New', monospace;
+    color: rgb(204, 163, 170);
 }
 
 a {
     font-size: 15px;
-    font-family: "BrandonSmith-font", "Comic Sans MS", cursive, sans-serif;
-    color: rgb(80, 40, 12);
+    font-family: 'Courier New', monospace;
+    color: rgb(204, 163, 170);
     width: max-content;
 }
 
-
 /* Legends must be a little bit smaller */
-
 span, .piano-key {
     font-size: 15px;
 }
@@ -52,20 +49,20 @@ span, .piano-key {
 p {
     font-size: 24px;
     text-shadow: 1px 1px black;
-    font-family: "BrandonSmith-font", "Comic Sans MS", cursive, sans-serif;
-    color: rgb(80, 40, 12);
+    font-family: 'Courier New', monospace;
+    color: rgb(204, 163, 170);
 }
 
 button {
     border: none;
-    color: rgb(80, 40, 12);
+    color: rgb(204, 163, 170);
     background-color: transparent;
     padding: 1px 1px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     font-weight: bold;
-    font-family: "BrandonSmith-font", "Comic Sans MS", cursive, sans-serif;
+    font-family:'Courier New', monospace;
     font-size: 20px;
     cursor: pointer;
 }
@@ -148,20 +145,22 @@ input:checked+#onoff-slider:before {
     border-radius: 50%;
 }
 
-@font-face {
+/* @font-face {
     font-family: BrandonSmith-font;
     src: url('images/BrandonSmith-Rp0eW.ttf') format('truetype');
-}
+} */
 
 .piano {
     height: 18.875em;
-    width: 62em;
+    width: 58.5em;
     margin: 5em auto;
     padding: 3em 0 0 3em;
     position: relative;
     border: 1px solid #160801;
     border-radius: 1em;
-    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/187/vwood.png);
+    background: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0)), url(images/metal.jpg);
+    background-size: contain;
+    /* background-image: url(images/metal.jpg); */
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5) inset, 0 1px rgba(212, 152, 125, 0.2) inset, 0 5px 15px rgba(0, 0, 0, 0.5)
 }
 

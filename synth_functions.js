@@ -113,15 +113,15 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const audioContext = new(window.AudioContext || window.webkitAudioContext)();
 
-    //Sound Gaining
-    const gainning = audioContext.createGain();
+    //Master Volume
+    const volume = audioContext.createGain();
 
-    const volumeControl = document.querySelector('#gaining');
+    const volumeControl = document.querySelector('#volume');
     volumeControl.addEventListener('input', function() {
-        gainning.gain.value = this.value;
+        volume.gain.value = this.value;
     }, false);
 
-    //Sound Panning
+    //Panner
     const panner = audioContext.createStereoPanner();
 
     const pannerControl = document.querySelector('#panner');
@@ -130,11 +130,12 @@ document.addEventListener("DOMContentLoaded", function() {
     }, false);
 
 
-    //VCF Gainning
+    //VCF Volume
     const vcf = audioContext.createBiquadFilter();
-    const vcfGainning = document.querySelector('#vcf');
+    vcf.type = "highpass";
+    const vcfVolume = document.querySelector('#vcf');
     vcf.gain.value = 0;
-    vcfGainning.addEventListener('input', function() {
+    vcfVolume.addEventListener('input', function() {
         vcf.gain.value = this.value;
     }, false);
 
@@ -174,11 +175,51 @@ document.addEventListener("DOMContentLoaded", function() {
     const vibrato = audioContext.createGain();
     const vibratoElement = document.querySelector('#vibrato');
     vibrato.gain.value = 0;
-    vibratoElement.addEventListener('input', function() {
+    vibratoElement.addEventListener('input', function() {       
         vibrato.gain.value = this.value;
     }, false);
 
+    //Waveforms of main Oscillator and LFO
+    var waveform = ["sine", "sine"];
+    var waveSelector = ['input[name="osc-radio"]', 'input[name="lfo-radio"]'];
+    for (let i = 0; i < 2; i++) {
+        document.querySelectorAll(waveSelector[i]).forEach((radioButton) => {
+            radioButton.addEventListener("change", function(event) {
+                waveform[i] = event.target.value;
+                console.log(waveform[i]);
+            });
+        });
+    }
 
+    //Detune of main Oscillator and Frequency of LFO
+    var detune_lfoFreq_values = [100, 5];
+    var detune_lfoFreq_selector = ['#det-freq', '#lfo-freq'];
+    for (let i = 0; i < 2; i++) {
+        document.querySelector(detune_lfoFreq_selector[i]).addEventListener("input", function(event) {
+            detune_lfoFreq_values[i] = event.target.value;
+            console.log(detune_lfoFreq_values[i]);
+        });
+    }
+
+    //ADSR Envelope    
+    var adsr_values = [
+        [1.5, 0, 0.5],  // [[attackValue, attackStartTime, attackEndTime],
+        [0.5, 0.3, 1],  // [decayValue, decayStartTime, decayEndTime], 
+        [0, 1, 1.5]     // [releaseValue, releaseStartTime, releaseEndTime]]
+    ];
+    var adsrSelector = [
+        ['#attack', '#attack-start', '#attack-end'],
+        ['#decay', '#decay-start', '#decay-end'],
+        ['#release', '#release-start', '#release-end']
+    ];
+    const adsrCtx = audioContext.createGain();
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
+                adsr_values[i][j] = event.target.value;
+            });
+        }
+    }
 
     //Notes
     hitKey('#n4C');
@@ -206,170 +247,52 @@ document.addEventListener("DOMContentLoaded", function() {
     hitKey('#n5As');
     hitKey('#n5B');
 
-    var waveform = ["sine", "sine"];
-    var waveSelector = ['input[name="osc-radio"]', 'input[name="lfo-radio"]'];
-    for (let i = 0; i < 2; i++) {
-        document.querySelectorAll(waveSelector[i]).forEach((radioButton) => {
-            radioButton.addEventListener("change", function(event) {
-                waveform[i] = event.target.value;
-                console.log(waveform[i]);
-            });
-        });
-    }
-
-    var detune_lfoFreq_values = [100, 5];
-    var detune_lfoFreq_selector = ['#det-freq', '#lfo-freq'];
-    for (let i = 0; i < 2; i++) {
-        document.querySelector(detune_lfoFreq_selector[i]).addEventListener("input", function(event) {
-            detune_lfoFreq_values[i] = event.target.value;
-            console.log(detune_lfoFreq_values[i]);
-        });
-    }
-
-    const adsrCtx = audioContext.createGain();
-
-    // [[attackValue, attackStartTime, attackEndTime], 
-    // [decayValue, decayStartTime, decayEndTime], 
-    // [releaseValue, releaseStartTime, releaseEndTime]]
-    var adsr_values = [
-        [1.5, 0, 0.5],
-        [0.5, 0.3, 1],
-        [0, 1, 1.5]
-    ];
-    var adsrSelector = [
-        ['#attack', '#attack-start', '#attack-end'],
-        ['#decay', '#decay-start', '#decay-end'],
-        ['#release', '#release-start', '#release-end']
-    ];
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
-                adsr_values[i][j] = event.target.value;
-            });
-        }
-    }
-
-
-
-    vcf.type = "highpass";
-
     function hitKey(note_name) {
         const note = document.querySelector(note_name);
-
+        //Things to do when user clicks at key
         note.addEventListener('mousedown', function() {
-            // console.log("Attack Value: " + attackValue);
             var freq = note.getAttribute('data-freq');
             oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-            console.log("freq: " + freq);
             oscillator.detune.value = detune_lfoFreq_values[0];
             oscillator.type = waveform[0];
-            adsrCtx.gain.value = 0.5;
 
-            //attack
+            //attack phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[0][0]), audioContext.currentTime + parseInt(adsr_values[0][1]), parseInt(adsr_values[0][2]));
 
             lfo.type = waveform[1];
             lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
-
-            //vibrato.gain.value = 100;
-            console.log("Gainning: " + gainning.gain.value);
-            console.log("Vibrato: " + vibrato.gain.value);
-            console.log("Tremolo: " + tremolo.gain.value);
-            console.log("VCF gain: " + vcf.gain.value);
-            console.log("VCF Freq: " + vcf.frequency.value);
-            console.log("VCF Q: " + vcf.Q.value);
-            // vcf.frequency.value = 200;
-            // vcf.Q.value = 5;
         }, false);
 
+        //Things to do when user stop clicking at key
         note.addEventListener('mouseup', function() {
-            //decay
+            //decay phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[1][0]), audioContext.currentTime + parseInt(adsr_values[1][1]), parseInt(adsr_values[1][2]));
-            //release
+            //release phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[2][0]), audioContext.currentTime + parseInt(adsr_values[2][1]), parseInt(adsr_values[2][2]));
 
         }, false);
     }
 
-    /* 
+    /* Cheatsheet of Web Audio Inspector (Firefox plugin) component numbering
     oscillator = Oscillator 12
     lfo= oscillator 15
     adsr= gain 22
-    gainning = gain 3
+    volume = gain 3
     tremolo = gain 18
     vibrato = gain 20
     */
 
-
-
-
     var shaper = audioContext.createWaveShaper();
     shaper.curve = new Float32Array([0, 1]);
-    //tremolo.connect(audioContext.destination);
 
-
-    // oscillator.connect(tremolo);
-    // lfo.connect(shaper);
-    // shaper.connect(tremolo.gain);
-    // lfo.connect(oscillator.detune);
-    // lfo.connect(vibrato);
-    // vibrato.connect(oscillator.detune);
-
-    // lfo.connect(shaper);
-    // shaper.connect(tremolo.gain);
-    // oscillator.connect(tremolo);
-    // tremolo.connect(adsrCtx);
-    // adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
-
-
-    // oscillator.connect(tremolo);
-    // lfo.connect(tremolo.gain);
-    // lfo.connect(vibrato);
-    // vibrato.connect(oscillator.detune);
-    // oscillator.connect(adsrCtx);
-    // tremolo.connect(adsrCtx);
-    // adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
-
-
-
-    //TREXEI MONO TO VIBRATO KAI TREXEI KALA
+    //Connect all components
     lfo.connect(vibrato);
+    lfo.connect(shaper);
+    shaper.connect(tremolo.gain);
+    tremolo.connect(vcf);
+    oscillator.connect(tremolo);
     vibrato.connect(oscillator.detune);
-    oscillator.connect(adsrCtx);
-    adsrCtx.connect(gainning).connect(panner).connect(audioContext.destination);
-
-
-
-    //OLA EINAI SAN GAIN VOLUME
-    // oscillator.connect(vcf);
-    // lfo.connect(vcf);
-    // vcf.connect(tremolo);
-    // vcf.connect(vibrato);
-    // tremolo.connect(adsrCtx);
-    // vibrato.connect(adsrCtx);
-    // adsrCtx.connect(gainning);
-    // gainning.connect(panner);
-    // panner.connect(audioContext.destination);
-
-
-    //DE STAMATAEI
-
-    // lfo.connect(gainning.gain);
-
-    // vibrato.connect(oscillator.frequency);
-    // vibrato.connect(oscillator.detune);
-    // lfo.connect(vibrato);
-
-    // oscillator.connect(tremolo);
-
-    // tremolo.connect(lfo.frequency);
-    // tremolo.connect(lfo.detune);
-    // lfo.connect(tremolo);
-
-    // lfo.connect(vcf);
-    // oscillator.connect(vcf);
-    // oscillator.connect(adsrCtx).connect(gainning).connect(vcf).connect(panner).connect(audioContext.destination);
-
-
-    // oscillator.connect(gainning).connect(panner).connect(audioContext.destination);
+    oscillator.connect(vcf);
+    vcf.connect(adsrCtx);
+    adsrCtx.connect(volume).connect(panner).connect(audioContext.destination);
 });
