@@ -196,7 +196,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }, false);
 
     //Waveforms of main Oscillator and LFO
-
     var waveform = ["sine", "sine"];
     var waveSelector = ['input[name="osc-radio"]', 'input[name="lfo-radio"]'];
     for (let i = 0; i < 2; i++) {
@@ -225,16 +224,12 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    //ADSR Envelope    
-
+    //ADSR Envelope 
     const adsrCtx = audioContext.createGain();
     const envelopeADSR = document.getElementsByClassName("envelope");
     const displayValue = document.getElementsByClassName("display-value");
 
     for (let i = 0; i < envelopeADSR.length; i++) {
-        //displayValue[i].innerHTML = envelopeADSR[i].value;
-        //console.log(envelopeADSR[i].value);
-        //console.log(displayValue[i]);
         if (i === 0 || i === 3 || i === 6) { //attack-decay-release
             displayValue[i].innerHTML = parseInt(envelopeADSR[i].value * 10) + " %";
         } else { //start-end time
@@ -247,29 +242,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 displayValue[i].innerHTML = event.target.value + " sec";
             }
         });
-
     }
-
-    // var adsr_values = [
-    //     [1.5, 0, 0.5], // [[attackValue, attackStartTime, attackEndTime],
-    //     [0.5, 0.3, 1], // [decayValue, decayStartTime, decayEndTime], 
-    //     [0, 1, 1.5] // [releaseValue, releaseStartTime, releaseEndTime]]
-    // ];
-    // var adsrSelector = [
-    //     ['#attack', '#attack-start', '#attack-end'],
-    //     ['#decay', '#decay-start', '#decay-end'],
-    //     ['#release', '#release-start', '#release-end']
-    // ];
-
-
-    // for (let i = 0; i < 3; i++) {
-    //     for (let j = 0; j < 3; j++) {
-    //         document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
-    //             adsr_values[i][j] = event.target.value;
-
-    //         });
-    //     }
-    // }
 
     //Notes
     hitKey('#n4C');
@@ -308,8 +281,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             //attack phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[0].value), audioContext.currentTime + parseInt(envelopeADSR[1].value), parseInt(envelopeADSR[2].value));
-            // adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[0][0]), audioContext.currentTime + parseInt(adsr_values[0][1]), parseInt(adsr_values[0][2]));
-
+        
             lfo.type = waveform[1];
             lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
         }, false);
@@ -318,12 +290,8 @@ document.addEventListener("DOMContentLoaded", function() {
         note.addEventListener('mouseup', function() {
             //decay phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[3].value), audioContext.currentTime + parseInt(envelopeADSR[4].value), parseInt(envelopeADSR[5].value));
-            //adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[1][0]), audioContext.currentTime + parseInt(adsr_values[1][1]), parseInt(adsr_values[1][2]));
-
             //release phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));
-            //adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[2][0]), audioContext.currentTime + parseInt(adsr_values[2][1]), parseInt(adsr_values[2][2]));
-
+            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));            
         }, false);
     }
 
