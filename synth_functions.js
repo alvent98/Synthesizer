@@ -30,7 +30,6 @@ function leftSide() {
     ];
 
     var notes = document.getElementById("piano").childNodes;
-    // console.log(notes[1].getAttribute('data-freq'));
     for (let i = 0; i < left.length; i++) {
         notes[2 * i + 1].setAttribute('data-freq', left[i][0]);
         notes[2 * i + 1].innerHTML = left[i][1];
@@ -117,13 +116,15 @@ document.addEventListener("DOMContentLoaded", function() {
     const volume = audioContext.createGain();
 
     const volumeControl = document.querySelector('#volume');
+    const volumeValue = document.getElementById('volume-value');
+    volumeValue.innerHTML = parseInt(volumeControl.value * 100) + "%";
     volumeControl.addEventListener('input', function() {
         volume.gain.value = this.value;
+        volumeValue.innerHTML = parseInt(this.value * 100) + "%";
     }, false);
 
     //Panner
     const panner = audioContext.createStereoPanner();
-
     const pannerControl = document.querySelector('#panner');
     pannerControl.addEventListener('input', function() {
         panner.pan.value = this.value;
@@ -134,23 +135,32 @@ document.addEventListener("DOMContentLoaded", function() {
     const vcf = audioContext.createBiquadFilter();
     vcf.type = "highpass";
     const vcfVolume = document.querySelector('#vcf');
-    vcf.gain.value = 0;
+    const vcfValue = document.getElementById('vcf-value');
+    vcf.gain.value = vcfVolume.value;
+    vcfValue.innerHTML = vcfVolume.value + " dB";
     vcfVolume.addEventListener('input', function() {
         vcf.gain.value = this.value;
+        vcfValue.innerHTML = this.value + " dB";
     }, false);
 
     //VCF Frequency
     const vcfFreq = document.querySelector('#vcf-freq');
-    vcf.frequency.value = 60;
+    const vcfFreqValue = document.getElementById('vcf-freq-value');
+    vcf.frequency.value = vcfFreq.value;
+    vcfFreqValue.innerHTML = vcfFreq.value + "Hz";
     vcfFreq.addEventListener('input', function() {
         vcf.frequency.value = this.value;
+        vcfFreqValue.innerHTML = this.value + " Hz";
     }, false);
 
     //VCF Q
     const vcfQ = document.querySelector('#vcf-q');
-    vcf.Q.value = 10;
+    const vcfQValue = document.getElementById("vcf-q-value");
+    vcf.Q.value = vcfQ.value;
+    vcfQValue.innerHTML = vcfQ.value;
     vcfQ.addEventListener('input', function() {
         vcf.Q.value = this.value;
+        vcfQValue.innerHTML = this.value;
     }, false);
 
     //Oscillator
@@ -166,27 +176,33 @@ document.addEventListener("DOMContentLoaded", function() {
     //Tremolo
     const tremolo = audioContext.createGain();
     const tremoloElement = document.querySelector('#tremolo');
-    tremolo.gain.value = 0;
+    const tremoloValue = document.getElementById("tremolo-value");
+    tremolo.gain.value = tremoloElement.value;
+    tremoloValue.innerHTML = tremoloElement.value + " %";
     tremoloElement.addEventListener('input', function() {
         tremolo.gain.value = this.value;
+        tremoloValue.innerHTML = parseInt(this.value / 10) + " %";
     }, false);
 
     //Vibrato
     const vibrato = audioContext.createGain();
     const vibratoElement = document.querySelector('#vibrato');
-    vibrato.gain.value = 0;
+    const vibratoValue = document.getElementById('vibrato-value');
+    vibrato.gain.value = vibratoElement.value;
+    vibratoValue.innerHTML = vibratoElement.value + " %";
     vibratoElement.addEventListener('input', function() {
         vibrato.gain.value = this.value;
+        vibratoValue.innerHTML = parseInt(this.value / 10) + " %";
     }, false);
 
     //Waveforms of main Oscillator and LFO
+
     var waveform = ["sine", "sine"];
     var waveSelector = ['input[name="osc-radio"]', 'input[name="lfo-radio"]'];
     for (let i = 0; i < 2; i++) {
         document.querySelectorAll(waveSelector[i]).forEach((radioButton) => {
             radioButton.addEventListener("change", function(event) {
                 waveform[i] = event.target.value;
-                console.log(waveform[i]);
             });
         });
     }
@@ -194,32 +210,66 @@ document.addEventListener("DOMContentLoaded", function() {
     //Detune of main Oscillator and Frequency of LFO
     var detune_lfoFreq_values = [100, 5];
     var detune_lfoFreq_selector = ['#det-freq', '#lfo-freq'];
+    const detuneValue = document.getElementById('det-value');
+    const lfoFreqValue = document.getElementById('lfo-freq-value');
+    detuneValue.innerHTML = parseInt(document.querySelector(detune_lfoFreq_selector[0]).value / 10) + " %";
+    lfoFreqValue.innerHTML = document.querySelector(detune_lfoFreq_selector[1]).value + " Hz";
     for (let i = 0; i < 2; i++) {
         document.querySelector(detune_lfoFreq_selector[i]).addEventListener("input", function(event) {
             detune_lfoFreq_values[i] = event.target.value;
-            console.log(detune_lfoFreq_values[i]);
+            if (i === 0) {
+                detuneValue.innerHTML = parseInt(event.target.value / 10) + " %";
+            } else if (i === 1) {
+                lfoFreqValue.innerHTML = parseInt(event.target.value) + " Hz";
+            }
         });
     }
 
     //ADSR Envelope    
-    var adsr_values = [
-        [1.5, 0, 0.5], // [[attackValue, attackStartTime, attackEndTime],
-        [0.5, 0.3, 1], // [decayValue, decayStartTime, decayEndTime], 
-        [0, 1, 1.5] // [releaseValue, releaseStartTime, releaseEndTime]]
-    ];
-    var adsrSelector = [
-        ['#attack', '#attack-start', '#attack-end'],
-        ['#decay', '#decay-start', '#decay-end'],
-        ['#release', '#release-start', '#release-end']
-    ];
+
     const adsrCtx = audioContext.createGain();
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
-                adsr_values[i][j] = event.target.value;
-            });
+    const envelopeADSR = document.getElementsByClassName("envelope");
+    const displayValue = document.getElementsByClassName("display-value");
+
+    for (let i = 0; i < envelopeADSR.length; i++) {
+        //displayValue[i].innerHTML = envelopeADSR[i].value;
+        //console.log(envelopeADSR[i].value);
+        //console.log(displayValue[i]);
+        if (i === 0 || i === 3 || i === 6) { //attack-decay-release
+            displayValue[i].innerHTML = parseInt(envelopeADSR[i].value * 10) + " %";
+        } else { //start-end time
+            displayValue[i].innerHTML = envelopeADSR[i].value + " sec";
         }
+        envelopeADSR[i].addEventListener("input", function(event) {
+            if (i === 0 || i === 3 || i === 6) { //attack-decay-release
+                displayValue[i].innerHTML = parseInt(event.target.value * 10) + " %";
+            } else { //start-end time
+                displayValue[i].innerHTML = event.target.value + " sec";
+            }
+        });
+
     }
+
+    // var adsr_values = [
+    //     [1.5, 0, 0.5], // [[attackValue, attackStartTime, attackEndTime],
+    //     [0.5, 0.3, 1], // [decayValue, decayStartTime, decayEndTime], 
+    //     [0, 1, 1.5] // [releaseValue, releaseStartTime, releaseEndTime]]
+    // ];
+    // var adsrSelector = [
+    //     ['#attack', '#attack-start', '#attack-end'],
+    //     ['#decay', '#decay-start', '#decay-end'],
+    //     ['#release', '#release-start', '#release-end']
+    // ];
+
+
+    // for (let i = 0; i < 3; i++) {
+    //     for (let j = 0; j < 3; j++) {
+    //         document.querySelector(adsrSelector[i][j]).addEventListener("input", function(event) {
+    //             adsr_values[i][j] = event.target.value;
+
+    //         });
+    //     }
+    // }
 
     //Notes
     hitKey('#n4C');
@@ -257,7 +307,8 @@ document.addEventListener("DOMContentLoaded", function() {
             oscillator.type = waveform[0];
 
             //attack phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[0][0]), audioContext.currentTime + parseInt(adsr_values[0][1]), parseInt(adsr_values[0][2]));
+            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[0].value), audioContext.currentTime + parseInt(envelopeADSR[1].value), parseInt(envelopeADSR[2].value));
+            // adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[0][0]), audioContext.currentTime + parseInt(adsr_values[0][1]), parseInt(adsr_values[0][2]));
 
             lfo.type = waveform[1];
             lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
@@ -266,9 +317,12 @@ document.addEventListener("DOMContentLoaded", function() {
         //Things to do when user stop clicking at key
         note.addEventListener('mouseup', function() {
             //decay phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[1][0]), audioContext.currentTime + parseInt(adsr_values[1][1]), parseInt(adsr_values[1][2]));
+            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[3].value), audioContext.currentTime + parseInt(envelopeADSR[4].value), parseInt(envelopeADSR[5].value));
+            //adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[1][0]), audioContext.currentTime + parseInt(adsr_values[1][1]), parseInt(adsr_values[1][2]));
+
             //release phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[2][0]), audioContext.currentTime + parseInt(adsr_values[2][1]), parseInt(adsr_values[2][2]));
+            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));
+            //adsrCtx.gain.setTargetAtTime(parseInt(adsr_values[2][0]), audioContext.currentTime + parseInt(adsr_values[2][1]), parseInt(adsr_values[2][2]));
 
         }, false);
     }

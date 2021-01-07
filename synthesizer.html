@@ -16,9 +16,9 @@
     <div class="grid-item">
         <label>Volume</label>
         <div>
-            <span>0%</span>
+
             <input type="range" id="volume" min="0" max="1" value="1" step="0.01">
-            <span>100%</span>
+            <span id="volume-value"></span>
         </div>
 
         <!-- Panner -->
@@ -35,82 +35,73 @@
     <div class="grid-item" id="adsr">
 
         <!-- Attack -->
-        <div class="attack-class">
+        <div>
             <div>
                 <label id="attack-label">Attack</label>
-                <span>0</span>
-                <input type="range" id="attack" min="0" max="10" value="1.5" step="0.01">
-                <span>10</span>
+                <input type="range" class="envelope" id="attack" min="0" max="10" value="1.5" step="0.1">
+                <span class="display-value"></span>
             </div>
 
             <!-- Start Time -->
 
             <div>
                 <label id="attack-start-label">Start Time</label>
-                <span>0</span>
-                <input type="range" id="attack-start" min="0" max="3" value="0" step="0.01">
-                <span>3</span>
+                <input type="range" class="envelope" id="attack-start" min="0" max="3" value="0" step="0.01">
+                <span class="display-value"> </span>
             </div>
             <!-- End Time -->
 
             <div>
                 <label id="attack-end-label">End Time</label>
-                <span>0</span>
-                <input type="range" id="attack-end" min="0" max="10" value="0.5" step="0.01">
-                <span>10</span>
+                <input type="range" class="envelope" id="attack-end" min="0" max="10" value="0.5" step="0.01">
+                <span class="display-value"></span>
             </div>
         </div>
         <br>
 
         <!-- Decay -->
 
-        <div class="decay-class">
+        <div>
             <div>
                 <label id="decay-label">Decay</label>
-                <span>0</span>
-                <input type="range" id="decay" min="0" max="10" value="0.5" step="0.01">
-                <span>10</span>
+                <input type="range" class="envelope" id="decay" min="0" max="10" value="0.5" step="0.1">
+                <span class="display-value"></span>
             </div>
             <!-- Start Time -->
 
             <div>
                 <label id="decay-start-label">Start Time</label>
-                <span>0</span>
-                <input type="range" id="decay-start" min="0" max="3" value="0.3" step="0.01">
-                <span>3</span>
+                <input type="range" class="envelope" id="decay-start" min="0" max="3" value="0.3" step="0.01">
+                <span class="display-value"></span>
             </div>
             <!-- End Time -->
 
             <div>
                 <label id="decay-end-label">End Time</label>
-                <span>0</span>
-                <input type="range" id="decay-end" min="0" max="5" value="1" step="0.01">
-                <span>5</span>
+                <input type="range" class="envelope" id="decay-end" min="0" max="5" value="1" step="0.01">
+                <span class="display-value"></span>
             </div>
         </div>
         <br>
 
         <!-- Release -->
-        <div class="release-class">
+        <div>
             <div>
                 <label id="release-label">Release</label>
-                <span>0</span>
-                <input type="range" id="release" min="0" max="10" value="0" step="0.01">
-                <span>10</span>
+                <input type="range" class="envelope" id="release" min="0" max="10" value="0" step="0.1">
+                <span class="display-value"></span>
             </div>
             <!-- Start Time -->
             <div>
                 <label id="release-start-label">Start Time</label>
-                <span>0</span>
-                <input type="range" id="release-start" min="0" max="3" value="1" step="0.01">
-                <span>3</span>
+                <input type="range" class="envelope" id="release-start" min="0" max="3" value="1" step="0.01">
+                <span class="display-value"></span>
             </div>
             <!-- End Time -->
             <div>
                 <label id="release-end-label">End Time</label>
-                <span>0</span>
-                <input type="range" id="release-end" min="0" max="5" value="1.5" step="0.01">
-                <span>5</span>
+                <input type="range" class="envelope" id="release-end" min="0" max="5" value="1.5" step="0.01">
+                <span class="display-value"></span>
             </div>
         </div>
     </div>
@@ -135,9 +126,8 @@
         <!-- Detune options -->
         <label id="det-label">Detune</label>
         <div>
-            <span>0</span>
             <input type="range" id="det-freq" min="0" max="1000" value="100" step="10">
-            <span>1000</span>
+            <span id="det-value"></span>
         </div>
 
         <!-- Change octave -->
@@ -169,11 +159,10 @@
             </label>
 
         <!-- LFO frequency  options -->
-        <label id="vcf-label">Frequency</label>
+        <label>Frequency</label>
         <div>
-            <span>0Hz</span>
             <input type="range" id="lfo-freq" min="0" max="50" value="5" step="0.5">
-            <span>50Hz</span>
+            <span id="lfo-freq-value"></span>
         </div>
     </div>
 
@@ -181,39 +170,35 @@
         <!-- Tremolo/Vibrato -->
         <label id="tremolo-label">Tremolo</label>
         <div>
-            <span>0</span>
             <input type="range" id="tremolo" min="0" max="1000" value="0" step="10">
-            <span>1000</span>
+            <span id="tremolo-value"></span>
         </div>
         <br>
         <br>
         <label id="vibrato-label">Vibrato</label>
         <div>
-            <span>0</span>
             <input type="range" id="vibrato" min="0" max="1000" value="0" step="10">
-            <span>1000</span>
+            <span id="vibrato-value"></span>
         </div>
     </div>
 
     <!-- VCF options -->
     <div class="grid-item" id="vcf-class">
-        <label id="vcf-label">VCF</label>
+        <label>VCF</label>
         <div>
-            <span>0dB</span>
             <input type="range" id="vcf" min="0" max="40" value="0" step="1">
-            <span>40dB</span>
+            <span id="vcf-value"></span>
         </div>
         <div>
-            <span>60Hz</span>
+
             <input type="range" id="vcf-freq" min="60" max="4000" value="60" step="10">
-            <span>4000Hz</span>
+            <span id="vcf-freq-value"></span>
         </div>
 
-        <label id="vcf-label-q">Q</label>
+        <label>Q</label>
         <div>
-            <span>0</span>
-            <input type="range" id="vcf-q" min="0" max="50" value="10" step="10">
-            <span>50</span>
+            <input type="range" id="vcf-q" min="0" max="50" value="10" step="1">
+            <span id="vcf-q-value"></span>
         </div>
     </div>
 
