@@ -108,6 +108,8 @@ function rightSide() {
     }
 }
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
 
     const audioContext = new(window.AudioContext || window.webkitAudioContext)();
@@ -245,33 +247,17 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     //Notes
-    hitKey('#n4C');
-    hitKey('#n4Cs');
-    hitKey('#n4D');
-    hitKey('#n4Ds');
-    hitKey('#n4E');
-    hitKey('#n4F');
-    hitKey('#n4Fs');
-    hitKey('#n4G');
-    hitKey('#n4Gs');
-    hitKey('#n4A');
-    hitKey('#n4As');
-    hitKey('#n4B');
-    hitKey('#n5C');
-    hitKey('#n5Cs');
-    hitKey('#n5D');
-    hitKey('#n5Ds');
-    hitKey('#n5E');
-    hitKey('#n5F');
-    hitKey('#n5Fs');
-    hitKey('#n5G');
-    hitKey('#n5Gs');
-    hitKey('#n5A');
-    hitKey('#n5As');
-    hitKey('#n5B');
+    var notes = document.getElementById('piano').getElementsByClassName('piano-key');
+    for (let i in notes) {
+        if (notes[i].innerHTML != null) {
+            hitKey("#n" + notes[i].innerHTML);
+        }
+    }
+
 
     function hitKey(note_name) {
         const note = document.querySelector(note_name);
+
         //Things to do when user clicks at key
         note.addEventListener('mousedown', function() {
             var freq = note.getAttribute('data-freq');
@@ -281,9 +267,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             //attack phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[0].value), audioContext.currentTime + parseInt(envelopeADSR[1].value), parseInt(envelopeADSR[2].value));
-        
+
             lfo.type = waveform[1];
             lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
+
         }, false);
 
         //Things to do when user stop clicking at key
@@ -291,8 +278,9 @@ document.addEventListener("DOMContentLoaded", function() {
             //decay phase (ADSR)
             adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[3].value), audioContext.currentTime + parseInt(envelopeADSR[4].value), parseInt(envelopeADSR[5].value));
             //release phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));            
+            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));
         }, false);
+
     }
 
     /* Cheatsheet of Web Audio Inspector (Firefox plugin) component numbering
