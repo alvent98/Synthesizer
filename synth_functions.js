@@ -2,109 +2,30 @@
 
 
 function leftSide() {
-    var left = [
-        [65, "2C"],
-        [69, "2Cs"],
-        [73, "2D"],
-        [77, "2Ds"],
-        [82, "2E"],
-        [87, "2F"],
-        [92, "2Fs"],
-        [97, "2G"],
-        [103, "2Gs"],
-        [110, "2A"],
-        [116, "2As"],
-        [123, "2B"],
-        [130, "3C"],
-        [138, "3Cs"],
-        [146, "3D"],
-        [155, "3Ds"],
-        [164, "3E"],
-        [174, "3F"],
-        [184, "3Fs"],
-        [195, "3G"],
-        [207, "3Gs"],
-        [220, "3A"],
-        [233, "3As"],
-        [246, "3B"]
-    ];
-
+    var left = [65, 69, 73, 77, 82, 87, 92, 97, 103, 110, 116, 123, 130, 138, 146, 155, 164, 174, 184, 195, 207, 220, 233, 246];
     var notes = document.getElementById("piano").childNodes;
+
     for (let i = 0; i < left.length; i++) {
-        notes[2 * i + 1].setAttribute('data-freq', left[i][0]);
-        notes[2 * i + 1].innerHTML = left[i][1];
+        notes[2 * i + 1].setAttribute('data-freq', left[i]);
     }
 }
 
 function centerSide() {
-    var center = [
-        [261, "4C"],
-        [277, "4Cs"],
-        [293, "4D"],
-        [311, "4Ds"],
-        [329, "4E"],
-        [349, "4F"],
-        [369, "4Fs"],
-        [391, "4G"],
-        [415, "4Gs"],
-        [440, "4A"],
-        [466, "4As"],
-        [493, "4B"],
-        [523, "5C"],
-        [554, "5Cs"],
-        [587, "5D"],
-        [622, "5Ds"],
-        [659, "5E"],
-        [698, "5F"],
-        [739, "5Fs"],
-        [783, "5G"],
-        [830, "5Gs"],
-        [880, "5A"],
-        [932, "5As"],
-        [987, "5B"]
-    ];
-
+    var center = [261, 277, 293, 311, 329, 349, 369, 391, 415, 440, 466, 493, 523, 554, 587, 622, 659, 698, 739, 783, 830, 880, 932, 987];
     var notes = document.getElementById("piano").childNodes;
 
     for (let i = 0; i < center.length; i++) {
-        notes[2 * i + 1].setAttribute('data-freq', center[i][0]);
-        notes[2 * i + 1].innerHTML = center[i][1];
+        notes[2 * i + 1].setAttribute('data-freq', center[i]);
+
     }
 }
 
 function rightSide() {
-    var right = [
-        [1046, "6C"],
-        [1108, "6Cs"],
-        [1174, "6D"],
-        [1244, "6Ds"],
-        [1318, "6E"],
-        [1396, "6F"],
-        [1479, "6Fs"],
-        [1567, "6G"],
-        [1661, "6Gs"],
-        [1760, "6A"],
-        [1864, "6As"],
-        [1975, "6B"],
-        [2093, "7C"],
-        [2217, "7Cs"],
-        [2349, "7D"],
-        [2489, "7Ds"],
-        [2637, "7E"],
-        [2793, "7F"],
-        [2959, "7Fs"],
-        [3135, "7G"],
-        [3322, "7Gs"],
-        [3520, "7A"],
-        [3729, "7As"],
-        [3951, "7B"]
-    ];
-
+    var right = [1046, 1108, 1174, 1244, 1318, 1396, 1479, 1567, 1661, 1760, 1864, 1975, 2093, 2217, 2349, 2489, 2637, 2793, 2959, 3135, 3322, 3520, 3729, 3951];
     var notes = document.getElementById("piano").childNodes;
 
     for (let i = 0; i < right.length; i++) {
-        notes[2 * i + 1].setAttribute('data-freq', right[i][0]);
-        notes[2 * i + 1].innerHTML = right[i][1];
+        notes[2 * i + 1].setAttribute('data-freq', right[i]);
     }
 }
 
@@ -248,11 +169,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //Notes
     var notes = document.getElementById('piano').getElementsByClassName('piano-key');
+    var noteKeys = new Array();
+
     for (let i in notes) {
         if (notes[i].innerHTML != null) {
-            hitKey("#n" + notes[i].innerHTML);
+            noteKeys.push('#' + notes[i].getAttribute('id'));
+            hitKey(noteKeys[i]);
         }
     }
+
+    const keys = document.querySelectorAll('.piano-key');
+    var dataKey = new Array();
+    keys.forEach(function(elem) {
+        dataKey.push(elem.getAttribute('data-key'));
+    });
 
 
     function hitKey(note_name) {
@@ -273,14 +203,33 @@ document.addEventListener("DOMContentLoaded", function() {
 
         }, false);
 
-        //Things to do when user stop clicking at key
-        note.addEventListener('mouseup', function() {
-            //decay phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[3].value), audioContext.currentTime + parseInt(envelopeADSR[4].value), parseInt(envelopeADSR[5].value));
-            //release phase (ADSR)
-            adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));
+        document.addEventListener('keydown', e => {
+            var freq = note.getAttribute('data-freq');
+            if (dataKey.includes(e.keyCode.toString()) && e.keyCode == note.getAttribute('data-key')) {
+                oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+                oscillator.detune.value = detune_lfoFreq_values[0];
+                oscillator.type = waveform[0];
+
+                //attack phase (ADSR)
+                adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[0].value), audioContext.currentTime + parseInt(envelopeADSR[1].value), parseInt(envelopeADSR[2].value));
+
+                lfo.type = waveform[1];
+                lfo.frequency.setValueAtTime(detune_lfoFreq_values[1], audioContext.currentTime);
+            }
+
         }, false);
 
+        document.addEventListener('keyup', releaseKey, false);
+        note.addEventListener('mouseup', releaseKey, false);
+    }
+
+
+    //Things to do when user stop clicking at key
+    function releaseKey() {
+        //decay phase (ADSR)
+        adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[3].value), audioContext.currentTime + parseInt(envelopeADSR[4].value), parseInt(envelopeADSR[5].value));
+        //release phase (ADSR)
+        adsrCtx.gain.setTargetAtTime(parseInt(envelopeADSR[6].value), audioContext.currentTime + parseInt(envelopeADSR[7].value), parseInt(envelopeADSR[8].value));
     }
 
     /* Cheatsheet of Web Audio Inspector (Firefox plugin) component numbering
